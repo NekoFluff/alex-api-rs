@@ -87,12 +87,15 @@ where
     //     .with_exception_field_propagation(true)
     //     .with_tracer(otel_tracer))
     let service_name: &str = env!("CARGO_BIN_NAME");
+    let endpoint: String = std::env::var("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT")
+        .unwrap_or_else(|_| "http://localhost:4317".to_string());
+
     let tracer = opentelemetry_otlp::new_pipeline()
         .tracing()
         .with_exporter(
             opentelemetry_otlp::new_exporter()
                 .tonic()
-                .with_endpoint("http://localhost:4317"),
+                .with_endpoint(endpoint),
         )
         .with_trace_config(opentelemetry_sdk::trace::config().with_resource(
             opentelemetry_sdk::Resource::new(vec![opentelemetry::KeyValue::new(
@@ -108,6 +111,9 @@ where
 
 pub fn build_otel_logging_layer() {
     let service_name: &str = env!("CARGO_BIN_NAME");
+    let endpoint: String = std::env::var("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT")
+        .unwrap_or_else(|_| "http://localhost:4317".to_string());
+
     let _logger = opentelemetry_otlp::new_pipeline()
         .logging()
         .with_log_config(
@@ -121,7 +127,7 @@ pub fn build_otel_logging_layer() {
         .with_exporter(
             opentelemetry_otlp::new_exporter()
                 .tonic()
-                .with_endpoint("http://localhost:4317"),
+                .with_endpoint(endpoint),
         )
         .install_batch(opentelemetry_sdk::runtime::Tokio)
         .expect("pipeline install failure");

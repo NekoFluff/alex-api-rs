@@ -1,0 +1,7 @@
+FROM rust:1.71 AS builder
+COPY . .
+RUN cargo build --release
+
+FROM debian:bullseye
+COPY --from=builder ./target/release/alex-api-rs ./target/release/alex-api-rs
+CMD ["./target/release/alex-api-rs"]

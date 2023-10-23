@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  alex-api-rs:
+    container_name: alex-api-rs
+    image: alex-api-rs
+    build:
+      context: .
+      dockerfile: ./Dockerfile.build
+      tags:
+        - "nekofluff/alex-api-rs"

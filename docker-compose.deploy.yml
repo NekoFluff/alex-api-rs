@@ -1,0 +1,43 @@
+version: '3.4'
+
+services:
+  alex-api-rs:
+    container_name: alex-api-rs
+    image: nekofluff/alex-api-rs
+    restart: always
+    ports:
+      - "${PORT}:${PORT}"
+    links:
+      - otel-collector:otel
+    environment:
+      OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME}
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://otel:4317
+      RUST_BACKTRACE: ${RUST_BACKTRACE}
+    depends_on:
+      - otel-collector
+  otel-collector:
+    container_name: otel-collector
+    image: otel/opentelemetry-collector
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT}
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
+    volumes:
+      - ./otel-collector-config.yml:/etc/otel-collector-config.yml
+    command: ["--config", "/etc/otel-collector-config.yml"]
+  agent:
+    container_name: newrelic-infra
+    build:
+      context: .
+      dockerfile: Dockerfile.newrelic-infra
+    cap_add:
+      - SYS_PTRACE
+    network_mode: host
+    pid: host
+    privileged: true
+    volumes:
+      - "/:/host:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    restart: unless-stopped

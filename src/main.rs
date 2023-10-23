@@ -11,6 +11,7 @@ use tracing_opentelemetry::OpenTelemetrySpanExt;
 use tracing_opentelemetry_instrumentation_sdk::find_current_trace_id;
 
 mod init_otel;
+mod layer;
 mod trace_id_format;
 
 #[tokio::main]
@@ -55,20 +56,7 @@ async fn health() -> impl IntoResponse {
 #[tracing::instrument]
 async fn index() -> impl IntoResponse {
     let trace_id = find_current_trace_id();
-    let span = tracing::Span::current();
-    span.record("result", "winner");
-    span.record("trace_id", &trace_id);
-    span.record("trace.id2", &trace_id);
-    span.record("trace.id", &trace_id);
-    span.record("WTF", "WTF");
-    dbg!(&trace_id);
 
-    span.set_attribute("WWWEEEEEE", "a");
-    span.set_attribute("trace.id", trace_id.clone().unwrap_or_default());
-
-    //std::thread::sleep(std::time::Duration::from_secs(1));
-    tracing::info!(something = "a", "shaving yaks again info");
-    tracing::warn!(something2 = "hi", "shaving yaks again");
     index_info().await;
     index_warning().await;
     index_error("AAA").await;
@@ -78,18 +66,8 @@ async fn index() -> impl IntoResponse {
 
 #[tracing::instrument]
 async fn index_error(e: &str) {
-    let trace_id2 = find_current_trace_id();
-    let span = tracing::Span::current();
-    span.record("trace.id2", &trace_id2);
-    span.record("WTF", "WTF");
-    // let mut span_id: u64 = 0;
-    // if let Some(id) = tracing::Span::current().id() {
-    //     span_id = id.into_u64();
-    // }
-
-    // tracing::warn!(span.id = span_id, trace.id = trace_id, "test error");
-    tracing::warn!(trace.id = trace_id2, "test error");
-    tracing::error!("test error2");
+    tracing::warn!("test warn");
+    tracing::error!("test error");
 }
 
 #[tracing::instrument]

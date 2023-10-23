@@ -1,7 +1,7 @@
 use init_tracing_opentelemetry::Error;
 use opentelemetry::sdk::trace::Tracer;
 use opentelemetry::trace::TraceError;
-use opentelemetry_appender_tracing::layer::OpenTelemetryTracingBridge;
+// use opentelemetry_appender_tracing::layer::OpenTelemetryTracingBridge;
 use opentelemetry_otlp::WithExportConfig;
 use opentelemetry_sdk::logs::Config;
 use tracing::{info, Subscriber};
@@ -12,6 +12,7 @@ use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::registry::LookupSpan;
 use tracing_subscriber::Layer;
 
+use crate::layer::OpenTelemetryTracingBridge;
 use crate::trace_id_format::TraceIdFormat;
 
 #[must_use]

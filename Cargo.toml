@@ -22,6 +22,7 @@ opentelemetry-jaeger = "0.19.0"
 opentelemetry-otlp = { version = "0.13.0", features = ["logs", "metrics"] }
 opentelemetry-semantic-conventions = "0.12.0"
 opentelemetry-stdout = { version = "0.1.0", features = ["futures-util", "logs", "metrics", "trace"] }
+opentelemetry_api = { version = "0.20.0", features = ["logs", "logs_level_enabled"] }
 opentelemetry_sdk = { version = "0.20.0", features = ["logs", "rt-tokio"] }
 serde = { version = "1.0.189", features = ["derive"] }
 serde_json = "1.0.107"
@@ -29,6 +30,7 @@ tokio = { version = "1.33.0", features = ["full"] }
 tonic = "0.10.2"
 tower = "0.4.13"
 tracing = { version = "0.1.40", features = ["log", "log-always"] }
+tracing-core = "0.1.32"
 tracing-error = "0.2.0"
 tracing-opentelemetry = "0.21.0"
 tracing-opentelemetry-instrumentation-sdk = "0.14.1"

@@ -1,0 +1,39 @@
+[package]
+name = "alex-api-rs"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+axum = "0.6.20"
+axum-tracing-opentelemetry = "0.14.1"
+color-eyre = "0.6.2"
+hyper = { version = "0.14.27", features = ["full"] }
+init-tracing-opentelemetry = { version = "0.14.1", features = ["otlp", "tracing_subscriber_ext"] }
+log = { version = "0.4.20", features = ["kv_unstable", "std"] }
+mini-redis = "0.4.1"
+once_cell = "1.18.0"
+opentelemetry = { version = "0.20.0", features = ["logs", "metrics", "rt-tokio"] }
+opentelemetry-appender-log = { version = "0.1.0", default-features = false }
+opentelemetry-appender-tracing = "0.1.0"
+# opentelemetry-appender-tracing = {  path = "../opentelemetry-rust/opentelemetry-appender-tracing" }
+opentelemetry-jaeger = "0.19.0"
+opentelemetry-otlp = { version = "0.13.0", features = ["logs", "metrics"] }
+opentelemetry-semantic-conventions = "0.12.0"
+opentelemetry-stdout = { version = "0.1.0", features = ["futures-util", "logs", "metrics", "trace"] }
+opentelemetry_sdk = { version = "0.20.0", features = ["logs", "rt-tokio"] }
+serde = { version = "1.0.189", features = ["derive"] }
+serde_json = "1.0.107"
+tokio = { version = "1.33.0", features = ["full"] }
+tonic = "0.10.2"
+tower = "0.4.13"
+tracing = { version = "0.1.40", features = ["log", "log-always"] }
+tracing-error = "0.2.0"
+tracing-opentelemetry = "0.21.0"
+tracing-opentelemetry-instrumentation-sdk = "0.14.1"
+tracing-serde = "0.1.3"
+tracing-subscriber = "0.3.17"
+
+[profile.dev.package.backtrace]
+opt-level = 3

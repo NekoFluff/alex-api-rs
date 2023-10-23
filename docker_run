@@ -1,0 +1,1 @@
+docker run --rm -e OTEL_EXPORTER_OTLP_ENDPOINT -e NEW_RELIC_LICENSE_KEY -p 4317:4317 -v ".\otel-config.yaml":/otel-config.yaml --name otelcol otel/opentelemetry-collector --config otel-config.yaml

@@ -13,7 +13,7 @@ services:
       - otel-collector:otel
     environment:
       OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME}
-      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://otel:4317
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: ${OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:-http://otel:4317}
       RUST_BACKTRACE: ${RUST_BACKTRACE}
     depends_on:
       - otel-collector

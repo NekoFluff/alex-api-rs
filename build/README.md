@@ -1,5 +1,5 @@
-# New Relic
-A `newrelic-infra.yml` file is required in this folder for collecting host metrics.
+# Local Dev and New Relic
+A `newrelic-infra.yml` file is required in this folder for collecting host metrics when running locally using docker-compose.
 
 ```
 license_key: YOUR_LICENSE_KEY

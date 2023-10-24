@@ -12,6 +12,8 @@ down-rmi:
 
 build:
 	docker compose --file=build/docker-compose.build.yml build
+
+push:
 	docker push nekofluff/alex-api-rs:latest
 
 deploy-up:

@@ -5,7 +5,7 @@ services:
     container_name: alex-api-rs
     image: alex-api-rs
     build:
-      context: .
-      dockerfile: ./Dockerfile.build
+      context: ..
+      dockerfile: build/Dockerfile.build
       tags:
         - "nekofluff/alex-api-rs"

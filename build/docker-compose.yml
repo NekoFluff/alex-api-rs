@@ -3,10 +3,12 @@ version: '3.4'
 services:
   alex-api-rs:
     container_name: alex-api-rs
-    image: nekofluff/alex-api-rs
-    restart: always
+    image: alex-api-rs
+    build:
+      context: ..
+      dockerfile: build/Dockerfile
     ports:
-      - "${PORT}:${PORT}"
+      - "${PORT:-3003}:${PORT:-3003}"
     links:
       - otel-collector:otel
     environment:

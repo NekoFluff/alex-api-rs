@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.deploy.yml
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: alex-api-rs
+  name: alex-api-rs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: alex-api-rs
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.deploy.yml
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: alex-api-rs
+    spec:
+      containers:
+        - env:
+            - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+              value: https://daemonset-collector:4317
+            - name: OTEL_SERVICE_NAME
+            - name: RUST_BACKTRACE
+          image: nekofluff/alex-api-rs
+          name: alex-api-rs
+          ports:
+            - containerPort: 3003
+          resources: {}
+      restartPolicy: Always
+status: {}

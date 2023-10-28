@@ -1,0 +1,11 @@
+namespace: default
+app:
+  serviceName: alex-api-rs
+  port: 3003
+  image:
+    name: nekofluff/alex-api-rs
+    tag: latest
+  otelEndpoint: https://daemonset-collector:4317
+  backtraceEnabled: 1
+collector:
+  otlpEndpoint: https://otlp.nr-data.net:4317

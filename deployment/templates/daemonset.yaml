@@ -2,6 +2,7 @@ apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
   name: daemonset
+  namespace: {{ .Values.namespace }}
 spec:
   mode: daemonset
   hostNetwork: true
@@ -17,7 +18,7 @@ spec:
 
     exporters:
       otlp:
-        endpoint: https://otlp.nr-data.net:4317
+        endpoint: {{ .Values.collector.otlpEndpoint }}
         headers:
           api-key: ${NEW_RELIC_LICENSE_KEY}
 

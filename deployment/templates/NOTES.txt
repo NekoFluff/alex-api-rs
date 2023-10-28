@@ -1,0 +1,2 @@
+
+kubectl port-forward service/{{ .Values.app.serviceName }} {{ .Values.app.port }} -n {{ .Values.namespace }}

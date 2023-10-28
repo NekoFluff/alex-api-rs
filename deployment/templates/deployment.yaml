@@ -1,18 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: {{ .Values.app.serviceName }}
+  namespace: {{ .Values.namespace }}
   annotations:
     kompose.cmd: kompose convert -f docker-compose.deploy.yml
     kompose.version: 1.26.0 (40646f47)
   creationTimestamp: null
   labels:
-    io.kompose.service: alex-api-rs
-  name: alex-api-rs
+    io.kompose.service: {{ .Values.app.serviceName }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: alex-api-rs
+      io.kompose.service: {{ .Values.app.serviceName }}
   strategy: {}
   template:
     metadata:
@@ -21,18 +22,20 @@ spec:
         kompose.version: 1.26.0 (40646f47)
       creationTimestamp: null
       labels:
-        io.kompose.service: alex-api-rs
+        io.kompose.service: {{ .Values.app.serviceName }}
     spec:
       containers:
         - env:
             - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-              value: https://daemonset-collector:4317
+              value: {{ .Values.app.otelEndpoint }}
             - name: OTEL_SERVICE_NAME
+              value: {{ .Values.app.serviceName }}
             - name: RUST_BACKTRACE
-          image: nekofluff/alex-api-rs
-          name: alex-api-rs
+              value: "{{ .Values.app.backtraceEnabled }}"
+          image: "{{ .Values.app.image.name }}:{{ .Values.app.image.tag }}"
+          name: {{ .Values.app.serviceName }}
           ports:
-            - containerPort: 3003
+            - containerPort: {{ .Values.app.port }}
           resources: {}
       restartPolicy: Always
 status: {}

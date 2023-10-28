@@ -1,4 +1,4 @@
-namespace: default
+namespace: dev
 app:
   serviceName: alex-api-rs
   port: 3003

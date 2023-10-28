@@ -34,24 +34,24 @@ kubectl delete secret newrelic-key-secret
 ## Deploy
 ```bash
 helm install alex-api-rs deployment --values deployment/values.yaml
-helm install alex-api-rs deployment --values deployment/values.yaml -f deployment/prod-values.yaml -n prod
+helm install alex-api-rs deployment --values deployment/values.yaml -f deployment/prod-values.yaml
 ```
 
 ## Port forward
 ```bash
-kubectl port-forward service/alex-api-rs 3003:3003
+kubectl port-forward service/alex-api-rs 3003:3003 -n dev
 kubectl port-forward service/alex-api-rs 3003:3003 -n prod
 ```
 
 ## Upgrade
 ```bash
-helm upgrade alex-api-rs deployment --values deployment/values.yaml
+helm upgrade alex-api-rs deployment --values deployment/values.yaml -n dev
 helm upgrade alex-api-rs deployment --values deployment/values.yaml -f deployment/prod-values.yaml -n prod
 ```
 
 ## Uninstall
 ```bash
-helm uninstall alex-api-rs
+helm uninstall alex-api-rs -n dev
 helm uninstall alex-api-rs -n prod
 ```
 

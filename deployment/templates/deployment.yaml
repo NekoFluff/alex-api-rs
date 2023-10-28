@@ -39,3 +39,12 @@ spec:
           resources: {}
       restartPolicy: Always
 status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: daemonset-collector
+  namespace: {{ .Values.namespace }}
+spec:
+  type: ExternalName
+  externalName: daemonset-collector.default.svc.cluster.local

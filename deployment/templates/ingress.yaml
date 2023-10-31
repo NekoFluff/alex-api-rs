@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.app.serviceName }}
+  namespace: {{ .Values.namespace }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    # nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    cert-manager.io/cluster-issuer: letsencrypt-dev
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - truthorlie.info
+  #     secretName: alexnou-com-tls
+  defaultBackend:
+    service:
+      name: {{ .Values.app.serviceName }}
+      port:
+        number: 3003
+  rules:
+    - host: "truthorlie.info"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/v1/api"
+            backend:
+              service:
+                name: {{ .Values.app.serviceName }}
+                port:
+                  number: {{ .Values.app.port }}
+

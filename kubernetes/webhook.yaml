@@ -1,0 +1,17 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: my-webhook
+  annotations:
+    cert-manager.io/inject-ca-from: default/my-webhook-certificate
+webhooks:
+  - name: app.default.svc
+    admissionReviewVersions:
+      - "v1"
+    sideEffects: None
+    failurePolicy: Ignore
+    clientConfig:
+      service:
+        name: my-webhook
+        namespace: default
+        path: "/mutate"

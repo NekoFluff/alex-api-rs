@@ -10,8 +10,17 @@ down:
 down-rmi:
 	docker compose --file=build/docker-compose.yml down --rmi local
 
-build:
-	docker compose --file=build/docker-compose.build.yml build
+build-multi-arch:
+	docker buildx create --name multi-arch \
+	--platform "linux/amd64" \
+	--driver "docker-container"
+	docker buildx use multi-arch
+
+build-image:
+	docker buildx build \
+	--platform "linux/amd64" \
+	--tag NekoFluff/alex-api-rs:latest \
+	--push . -f build/Dockerfile.build
 
 push:
 	docker push nekofluff/alex-api-rs:latest

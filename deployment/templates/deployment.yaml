@@ -25,26 +25,17 @@ spec:
         io.kompose.service: {{ .Values.app.serviceName }}
     spec:
       containers:
-        - env:
+        - name: {{ .Values.app.serviceName }}
+          image: "{{ .Values.app.image.name }}:{{ .Values.app.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.app.port }}
+          env:
             - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
               value: {{ .Values.app.otelEndpoint }}
             - name: OTEL_SERVICE_NAME
               value: {{ .Values.app.serviceName }}
             - name: RUST_BACKTRACE
               value: "{{ .Values.app.backtraceEnabled }}"
-          image: "{{ .Values.app.image.name }}:{{ .Values.app.image.tag }}"
-          name: {{ .Values.app.serviceName }}
-          ports:
-            - containerPort: {{ .Values.app.port }}
           resources: {}
       restartPolicy: Always
 status: {}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: daemonset-collector
-  namespace: {{ .Values.namespace }}
-spec:
-  type: ExternalName
-  externalName: daemonset-collector.default.svc.cluster.local

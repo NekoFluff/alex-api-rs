@@ -10,10 +10,12 @@ metadata:
   labels:
     io.kompose.service: {{ .Values.app.serviceName }}
 spec:
+  # type: LoadBalancer
   ports:
     - name: "{{ .Values.app.port }}"
       port: {{ .Values.app.port }}
       targetPort: {{ .Values.app.port }}
+      # nodePort: 30003
   selector:
     io.kompose.service: {{ .Values.app.serviceName }}
 status:

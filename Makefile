@@ -12,13 +12,13 @@ down-rmi:
 
 build-multi-arch:
 	docker buildx create --name multi-arch \
-	--platform "linux/amd64" \
+	--platform "linux/amd64,linux/arm/v7" \
 	--driver "docker-container"
 	docker buildx use multi-arch
 
 build-image:
 	docker buildx build \
-	--platform "linux/amd64" \
+	--platform "linux/amd64,linux/arm/v7" \
 	--tag NekoFluff/alex-api-rs:latest \
 	--push . -f build/Dockerfile.build
 

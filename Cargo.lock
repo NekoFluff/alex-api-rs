@@ -34,7 +34,6 @@ dependencies = [
  "axum-tracing-opentelemetry",
  "color-eyre",
  "hyper",
- "init-tracing-opentelemetry",
  "log",
  "mini-redis",
  "once_cell",
@@ -627,21 +626,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "init-tracing-opentelemetry"
-version = "0.14.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "94bd26b1b737bc11f183620072e188d1c6ede67e0e78682228d66b49ec510e17"
-dependencies = [
- "opentelemetry",
- "opentelemetry-otlp",
- "opentelemetry-semantic-conventions",
- "thiserror",
- "tracing",
- "tracing-opentelemetry",
- "tracing-subscriber 0.3.17",
-]
-
-[[package]]
 name = "integer-encoding"
 version = "3.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -888,7 +872,6 @@ dependencies = [
  "async-trait",
  "futures-core",
  "http",
- "opentelemetry-http",
  "opentelemetry-proto",
  "opentelemetry-semantic-conventions",
  "opentelemetry_api",

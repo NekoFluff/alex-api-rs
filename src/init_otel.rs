@@ -1,4 +1,5 @@
-use init_tracing_opentelemetry::Error;
+use std::error::Error;
+
 use opentelemetry::sdk::trace::Tracer;
 use opentelemetry::trace::TraceError;
 // use opentelemetry_appender_tracing::layer::OpenTelemetryTracingBridge;
@@ -133,7 +134,7 @@ pub fn build_otel_logging_layer() {
         .expect("pipeline install failure");
 }
 
-pub fn init_subscribers() -> Result<(), Error> {
+pub fn init_subscribers() -> Result<(), Box<dyn Error>> {
     //setup a temporary subscriber to log output during setup
     let subscriber = tracing_subscriber::registry()
         .with(build_loglevel_filter_layer())

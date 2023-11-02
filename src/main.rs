@@ -5,6 +5,7 @@ use axum::extract::Path;
 use axum::{response::IntoResponse, routing::get, BoxError, Router};
 use axum_tracing_opentelemetry::middleware::{OtelAxumLayer, OtelInResponseLayer};
 use serde_json::json;
+use std::error::Error;
 use std::net::SocketAddr;
 use tracing::span::Id;
 use tracing_opentelemetry::OpenTelemetrySpanExt;
@@ -15,7 +16,7 @@ mod layer;
 mod trace_id_format;
 
 #[tokio::main]
-async fn main() -> Result<(), BoxError> {
+async fn main() -> Result<(), Box<dyn Error>> {
     // std::env::set_var("RUST_LOG", "warn,otel::tracing=info,otel=debug");
     // very opinionated init of tracing, look as is source to make your own
     // init_tracing_opentelemetry::tracing_subscriber_ext::init_subscribers()?;

@@ -19,8 +19,8 @@ build-multi-arch:
 build-image:
 	docker buildx build \
 	--platform "linux/amd64,linux/arm/v7" \
-	--tag NekoFluff/alex-api-rs:latest \
-	--push . -f build/Dockerfile.build
+	--tag nekofluff/alex-api-rs:latest \
+	--push . -f build/Dockerfile
 
 push:
 	docker push nekofluff/alex-api-rs:latest

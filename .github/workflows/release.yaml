@@ -103,8 +103,9 @@ jobs:
       - name: "Build and push Docker image"
         uses: "docker/build-push-action@v3"
         with:
-          context: ./build
+          context: .
+          file: ./build/Dockerfile
           push: true
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm/v7
           tags: nekofluff/alex-api-rs:latest,nekofluff/alex-api-rs:v${{ needs.get-tag.outputs.pkg-version }}
           labels: ${{ steps.meta.outputs.labels }}

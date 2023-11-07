@@ -106,6 +106,6 @@ jobs:
           context: .
           file: ./build/Dockerfile
           push: true
-          platforms: linux/amd64,linux/arm/v7
+          platforms: linux/amd64,linux/arm64
           tags: nekofluff/alex-api-rs:latest,nekofluff/alex-api-rs:v${{ needs.get-tag.outputs.pkg-version }}
           labels: ${{ steps.meta.outputs.labels }}

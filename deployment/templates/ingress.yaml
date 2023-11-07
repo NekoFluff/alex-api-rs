@@ -6,28 +6,53 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/rewrite-target: /
-    # nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    cert-manager.io/cluster-issuer: letsencrypt-dev
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # cert-manager.io/cluster-issuer: letsencrypt-dev
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+    # cert-manager.io/acme-challenge-type: http01
 spec:
-  ingressClassName: nginx
-  tls:
-    - hosts:
-        - truthorlie.info
-  #     secretName: alexnou-com-tls
+  # ingressClassName: nginx
+  # tls:
+  #   - hosts:
+  #       - truthorlie.info
+      # secretName: truth-or-lie-tls
   defaultBackend:
     service:
       name: {{ .Values.app.serviceName }}
       port:
-        number: 3003
+        number: {{ .Values.app.port }}
   rules:
-    - host: "truthorlie.info"
+    - host: www.truthorlie.info
       http:
         paths:
-          - pathType: Prefix
-            path: "/v1/api"
+          - path: /
+            pathType: Prefix
             backend:
               service:
-                name: {{ .Values.app.serviceName }}
+                name:  {{ .Values.app.serviceName }}
                 port:
                   number: {{ .Values.app.port }}
-
+          - path: /foo
+            pathType: Exact
+            backend:
+              service:
+                name:  {{ .Values.app.serviceName }}
+                port:
+                  number: {{ .Values.app.port }}
+    - host: truthorlie.info
+      http:
+        paths:
+          - path: /
+            pathType: Exact
+            backend:
+              service:
+                name:  {{ .Values.app.serviceName }}
+                port:
+                  number: {{ .Values.app.port }}
+          - path: /foo
+            pathType: Exact
+            backend:
+              service:
+                name:  {{ .Values.app.serviceName }}
+                port:
+                  number: {{ .Values.app.port }}

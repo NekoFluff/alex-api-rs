@@ -1,12 +1,14 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: my-webhook-certificate
-  namespace: default
+  name: truth-or-lie-cert
+  namespace: dev
 spec:
-  secretName: my-webhook-certificate-secret
+  secretName: truth-or-lie-tls
+  renewBefore: 240h
   dnsNames:
-    - my-webhook
-    - my-webhook.default
+    - truthorlie.info
+    - www.truthorlie.info
   issuerRef:
-    name: self-signer
+    name: letsencrypt-prod
+    kind: ClusterIssuer

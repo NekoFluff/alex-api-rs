@@ -112,15 +112,13 @@ Install otel-operator
 helm install opentelemetry-operator open-telemetry/opentelemetry-operator
 ```
 
-### Install Ingress Nginx
+### Install Ingress Nginx Controller
 
-```bash
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm search repo ingress-nginx
-```
+If you're using k3s, you should already have Traefik installed. You can skip this step.
 
+Details [here](https://kubernetes.github.io/ingress-nginx/deploy/#bare-metal-clusters)
 ```bash
-helm install --name nginx-ingress stable/nginx-ingress
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/baremetal/deploy.yaml
 ```
 
 # Deploy

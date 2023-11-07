@@ -4,11 +4,11 @@ metadata:
   name: {{ .Values.app.serviceName }}
   namespace: {{ .Values.namespace }}
   annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    kubernetes.io/ingress.class: traefik
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+    # nginx.ingress.kubernetes.io/ssl-redirect: "false"
     # cert-manager.io/cluster-issuer: letsencrypt-dev
-    # cert-manager.io/cluster-issuer: letsencrypt-prod
+    # # cert-manager.io/cluster-issuer: letsencrypt-prod
     # cert-manager.io/acme-challenge-type: http01
 spec:
   # ingressClassName: nginx
@@ -22,37 +22,33 @@ spec:
       port:
         number: {{ .Values.app.port }}
   rules:
-    - host: www.truthorlie.info
+    - host: "alexapirs.ddns.net"
       http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name:  {{ .Values.app.serviceName }}
-                port:
-                  number: {{ .Values.app.port }}
-          - path: /foo
-            pathType: Exact
-            backend:
-              service:
-                name:  {{ .Values.app.serviceName }}
-                port:
-                  number: {{ .Values.app.port }}
-    - host: truthorlie.info
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name:  {{ .Values.app.serviceName }}
+                  port:
+                    number: {{ .Values.app.port }}
+    - host: "www.truthorlie.info"
       http:
-        paths:
-          - path: /
-            pathType: Exact
-            backend:
-              service:
-                name:  {{ .Values.app.serviceName }}
-                port:
-                  number: {{ .Values.app.port }}
-          - path: /foo
-            pathType: Exact
-            backend:
-              service:
-                name:  {{ .Values.app.serviceName }}
-                port:
-                  number: {{ .Values.app.port }}
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name:  {{ .Values.app.serviceName }}
+                  port:
+                    number: {{ .Values.app.port }}
+    - host: "truthorlie.info"
+      http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name:  {{ .Values.app.serviceName }}
+                  port:
+                    number: {{ .Values.app.port }}

@@ -2,21 +2,32 @@
 #![allow(clippy::default_constructed_unit_structs)] // warning since 1.71
 
 use axum::extract::Path;
-use axum::{response::IntoResponse, routing::get, BoxError, Router};
+use axum::{response::IntoResponse, routing::get, routing::post, BoxError, Router};
 use axum_tracing_opentelemetry::middleware::{OtelAxumLayer, OtelInResponseLayer};
+use dsp::ComputedRecipeRequest;
+use optimizer::OptimizerConfig;
 use serde_json::json;
+use std::collections::HashMap;
 use std::error::Error;
 use std::net::SocketAddr;
 use tracing::span::Id;
 use tracing_opentelemetry::OpenTelemetrySpanExt;
 use tracing_opentelemetry_instrumentation_sdk::find_current_trace_id;
 
+mod data;
+mod dsp;
 mod init_otel;
 mod layer;
+mod optimizer;
+mod scrape;
+mod timekeeper;
 mod trace_id_format;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    dotenv::dotenv().ok();
+    let port = std::env::var("PORT").unwrap_or_else(|_| "3003".to_string());
+
     // std::env::set_var("RUST_LOG", "warn,otel::tracing=info,otel=debug");
     // very opinionated init of tracing, look as is source to make your own
     // init_tracing_opentelemetry::tracing_subscriber_ext::init_subscribers()?;
@@ -24,10 +35,16 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let app = app();
     // run it
-    let addr = &"0.0.0.0:3003".parse::<SocketAddr>()?;
+    let addr = &format!("0.0.0.0:{}", port).parse::<SocketAddr>()?;
     tracing::warn!("listening on {}", addr);
-    tracing::info!("try to call `curl -i http://127.0.0.1:3003/` (with trace)"); //Devskim: ignore DS137138
-    tracing::info!("try to call `curl -i http://127.0.0.1:3003/health` (with NO trace)"); //Devskim: ignore DS137138
+    tracing::info!(
+        "try to call `curl -i http://127.0.0.1:{}/` (with trace)",
+        port
+    ); //Devskim: ignore DS137138
+    tracing::info!(
+        "try to call `curl -i http://127.0.0.1:{}/health` (with NO trace)",
+        port
+    ); //Devskim: ignore DS137138
     axum::Server::bind(addr)
         .serve(app.into_make_service())
         .with_graceful_shutdown(shutdown_signal())
@@ -43,6 +60,8 @@ fn app() -> Router {
             get(proxy_handler).post(proxy_handler),
         )
         .route("/", get(index)) // request processed inside span
+        .route("/dsp/recipes", get(dsp_recipes))
+        .route("/dsp/computedRecipes", post(dsp_computed_recipes))
         // include trace context as header into the response
         .layer(OtelInResponseLayer::default())
         //start OpenTelemetry trace on incoming request
@@ -63,6 +82,32 @@ async fn index() -> impl IntoResponse {
     index_error("AAA").await;
 
     axum::Json(json!({ "my_trace_id": trace_id }))
+}
+
+#[tracing::instrument]
+async fn dsp_recipes() -> impl IntoResponse {
+    let recipes = dsp::load_recipes().await;
+    axum::Json(json!(recipes))
+}
+
+#[tracing::instrument]
+#[axum::debug_handler]
+async fn dsp_computed_recipes(
+    axum::Json(payload): axum::Json<ComputedRecipeRequest>,
+) -> impl IntoResponse {
+    let mut optimizer = optimizer::Optimizer::new(OptimizerConfig {});
+    let recipes = dsp::load_recipes().await;
+    optimizer.set_recipes(recipes);
+    let mut seen = HashMap::new();
+    let computed_recipes = optimizer.get_optimal_recipe(
+        payload.name,
+        payload.rate,
+        "".to_string(),
+        &mut seen,
+        0,
+        payload.requirements,
+    );
+    axum::Json(json!(computed_recipes))
 }
 
 #[tracing::instrument]

@@ -12,6 +12,7 @@ Read up on secrets [here](https://kubernetes.io/docs/concepts/configuration/secr
 
 ```bash
 kubectl create secret generic newrelic-key-secret --from-literal=new_relic_license_key=XXXX
+kubectl create secret generic mongodb-secret --from-literal=mongodb_uri=XXXX -n dev
 ```
 
 ### Read/Edit/Delete secrets

@@ -24,6 +24,10 @@ spec:
       labels:
         io.kompose.service: {{ .Values.app.serviceName }}
     spec:
+      volumes:
+        - name: secret-volume
+          secret:
+            secretName: mongodb-secret
       containers:
         - name: {{ .Values.app.serviceName }}
           image: "{{ .Values.app.image.name }}:{{ .Values.app.image.tag }}"
@@ -37,5 +41,9 @@ spec:
             - name: RUST_BACKTRACE
               value: "{{ .Values.app.backtraceEnabled }}"
           resources: {}
+          volumeMounts:
+            - name: secret-volume
+              readOnly: true
+              mountPath: .env
       restartPolicy: Always
 status: {}

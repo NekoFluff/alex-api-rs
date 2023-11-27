@@ -3,11 +3,13 @@ use crate::data::Recipe;
 use super::dsp::{ComputedRecipe, RecipeRequirements};
 use std::collections::HashMap;
 
+#[derive(Debug)]
 pub struct Optimizer {
     recipe_map: HashMap<String, Vec<Recipe>>,
     config: OptimizerConfig,
 }
 
+#[derive(Debug)]
 pub struct OptimizerConfig {}
 
 impl Optimizer {
@@ -22,6 +24,7 @@ impl Optimizer {
         self.recipe_map = recipes;
     }
 
+    #[tracing::instrument]
     fn get_recipe(&self, item_name: String, recipe_idx: i64) -> Option<Recipe> {
         let name = item_name.to_lowercase();
         let recipes = self.recipe_map.get(&name)?;
@@ -34,6 +37,7 @@ impl Optimizer {
         Some(recipes[0].clone())
     }
 
+    #[tracing::instrument]
     fn get_recipes(&self) -> Vec<Vec<Recipe>> {
         let mut recipes: Vec<Vec<Recipe>> = vec![];
         for (_, recipe) in self.recipe_map.iter() {
@@ -42,6 +46,7 @@ impl Optimizer {
         recipes
     }
 
+    #[tracing::instrument]
     pub fn get_optimal_recipe(
         &self,
         item_name: String,
@@ -115,6 +120,7 @@ impl Optimizer {
         computed_recipes
     }
 
+    #[tracing::instrument]
     fn sort_recipes(&self, recipes: &mut Vec<ComputedRecipe>) {
         recipes.sort_by(|a, b| {
             if a.depth != b.depth {
@@ -129,6 +135,7 @@ impl Optimizer {
         });
     }
 
+    #[tracing::instrument]
     fn combine_recipes(&self, recipes: &mut Vec<ComputedRecipe>) -> Vec<ComputedRecipe> {
         let mut unique_recipes: HashMap<String, ComputedRecipe> = HashMap::new();
 
@@ -175,6 +182,7 @@ impl Optimizer {
     }
 }
 
+#[tracing::instrument]
 fn max(a: Option<i64>, b: Option<i64>) -> Option<i64> {
     match (a, b) {
         (Some(a), Some(b)) => Some(a.max(b)),

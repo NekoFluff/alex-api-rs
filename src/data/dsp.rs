@@ -5,6 +5,7 @@ use futures::{StreamExt, TryStreamExt};
 use mongodb::bson::Document;
 use mongodb::{bson::doc, Client, Collection};
 
+#[derive(Debug)]
 pub struct DB {}
 
 impl DB {
@@ -12,6 +13,7 @@ impl DB {
         Self {}
     }
 
+    #[tracing::instrument]
     pub async fn test(&self) -> mongodb::error::Result<()> {
         let uri = env::var("MONGODB_URI").unwrap();
         let client = Client::with_uri_str(uri).await?;
@@ -26,6 +28,7 @@ impl DB {
         Ok(())
     }
 
+    #[tracing::instrument]
     pub async fn get_recipes(&self) -> mongodb::error::Result<Vec<Recipe>> {
         let uri = env::var("MONGODB_URI").unwrap();
         let client = Client::with_uri_str(uri).await?;
@@ -36,6 +39,7 @@ impl DB {
         Ok(recipes)
     }
 
+    #[tracing::instrument]
     pub async fn delete_recipes(&self) -> mongodb::error::Result<()> {
         let uri = env::var("MONGODB_URI").unwrap();
         let client = Client::with_uri_str(uri).await?;
@@ -47,6 +51,7 @@ impl DB {
         Ok(())
     }
 
+    #[tracing::instrument]
     pub async fn save_recipes(&self, recipes: Vec<Recipe>) -> mongodb::error::Result<()> {
         let uri = env::var("MONGODB_URI").unwrap();
         let client = Client::with_uri_str(uri).await?;
@@ -56,6 +61,7 @@ impl DB {
         Ok(())
     }
 
+    #[tracing::instrument]
     pub async fn save_recipe(&self, recipe: Recipe) -> mongodb::error::Result<()> {
         let uri = env::var("MONGODB_URI").unwrap();
         let client = Client::with_uri_str(uri).await?;

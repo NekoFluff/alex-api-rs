@@ -45,32 +45,34 @@ jobs:
           ref: refs/tags/v${{ needs.get-tag.outputs.pkg-version }}
           token: ${{ secrets.GH_PAT }}
 
-  upload-assets:
-    name: "Upload assets to Github releases"
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    needs:
-     - "get-tag"
-     - "create-release"
-    strategy:
-      matrix:
-        include:
-          - target: "x86_64-unknown-linux-gnu"
-            os: "ubuntu-latest"
-          - target: "x86_64-unknown-linux-musl"
-            os: "ubuntu-latest"
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: "Check out the repo"
-        uses: actions/checkout@v3
+  # upload-assets:
+  #   name: "Upload assets to Github releases"
+  #   if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  #   needs:
+  #    - "get-tag"
+  #    - "create-release"
+  #   strategy:
+  #     matrix:
+  #       include:
+  #         - target: "x86_64-unknown-linux-gnu"
+  #           os: "ubuntu-latest"
+  #         - target: "x86_64-unknown-linux-musl"
+  #           os: "ubuntu-latest"
+  #         - target: "arm64-unknown-linux-gnueabi"
+  #           os: "ubuntu-latest"
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - name: "Check out the repo"
+  #       uses: actions/checkout@v3
 
-      - name: "Upload Binaries"
-        uses: "taiki-e/upload-rust-binary-action@v1"
-        with:
-          bin: "alex-api-rs"
-          target: ${{ matrix.target }}
-          archive: $bin-${{ matrix.target }}
-          ref: refs/tags/v${{ needs.get-tag.outputs.pkg-version }}
-          token: ${{ secrets.GH_PAT }}
+  #     - name: "Upload Binaries"
+  #       uses: "taiki-e/upload-rust-binary-action@v1"
+  #       with:
+  #         bin: "alex-api-rs"
+  #         target: ${{ matrix.target }}
+  #         archive: $bin-${{ matrix.target }}
+  #         ref: refs/tags/v${{ needs.get-tag.outputs.pkg-version }}
+  #         token: ${{ secrets.GH_PAT }}
 
   push-image-to-registry:
     name: "Push Docker image to Docker Hub"

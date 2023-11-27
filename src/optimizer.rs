@@ -15,12 +15,12 @@ impl Optimizer {
         }
     }
 
-    #[tracing::instrument]
+    #[tracing::instrument(skip(self))]
     pub fn set_recipes(&mut self, recipes: HashMap<String, Vec<Recipe>>) {
         self.recipe_map = recipes;
     }
 
-    #[tracing::instrument]
+    #[tracing::instrument(skip(self))]
     fn get_recipe(&self, item_name: String, recipe_idx: i64) -> Option<Recipe> {
         let name = item_name.to_lowercase();
         let recipes = self.recipe_map.get(&name)?;
@@ -33,7 +33,7 @@ impl Optimizer {
         Some(recipes[0].clone())
     }
 
-    #[tracing::instrument]
+    #[tracing::instrument(skip(self))]
     fn get_recipes(&self) -> Vec<Vec<Recipe>> {
         let mut recipes: Vec<Vec<Recipe>> = vec![];
         for (_, recipe) in self.recipe_map.iter() {
@@ -42,7 +42,7 @@ impl Optimizer {
         recipes
     }
 
-    #[tracing::instrument]
+    #[tracing::instrument(skip(self))]
     pub fn get_optimal_recipe(
         &self,
         item_name: String,
@@ -116,7 +116,7 @@ impl Optimizer {
         computed_recipes
     }
 
-    #[tracing::instrument]
+    #[tracing::instrument(skip(self))]
     fn sort_recipes(&self, recipes: &mut Vec<ComputedRecipe>) {
         recipes.sort_by(|a, b| {
             if a.depth != b.depth {
@@ -131,7 +131,7 @@ impl Optimizer {
         });
     }
 
-    #[tracing::instrument]
+    #[tracing::instrument(skip(self))]
     fn combine_recipes(&self, recipes: &mut Vec<ComputedRecipe>) -> Vec<ComputedRecipe> {
         let mut unique_recipes: HashMap<String, ComputedRecipe> = HashMap::new();
 

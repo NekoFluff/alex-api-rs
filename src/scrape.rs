@@ -26,6 +26,7 @@ impl<'a> RetryRequest<'a> {
         Self { url }
     }
 
+    #[tracing::instrument]
     pub async fn fetch(&self) -> Result<String, RetryRequestError> {
         let mut retries = 0;
         loop {
@@ -73,6 +74,7 @@ impl Scraper {
         Self {}
     }
 
+    #[tracing::instrument]
     pub async fn scrape_dsp_data(&self, mut urls: Vec<String>) -> Vec<Vec<Recipe>> {
         let mut timekeeper = timekeeper::TimeKeeper::new();
         println!("Start {:?}", timekeeper.start());
@@ -108,6 +110,7 @@ impl Scraper {
         recipe_lists
     }
 
+    #[tracing::instrument]
     pub async fn get_urls(&self) -> Vec<String> {
         let response = reqwest::get("https://dsp-wiki.com/Items")
             .await
@@ -131,6 +134,7 @@ impl Scraper {
         urls
     }
 
+    #[tracing::instrument]
     pub async fn scrape_url(&self, url: &str) -> Vec<Recipe> {
         println!("Scraping URL: {}", url);
 

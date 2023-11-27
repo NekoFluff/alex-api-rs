@@ -15,6 +15,7 @@ impl Optimizer {
         }
     }
 
+    #[tracing::instrument]
     pub fn set_recipes(&mut self, recipes: HashMap<String, Vec<Recipe>>) {
         self.recipe_map = recipes;
     }

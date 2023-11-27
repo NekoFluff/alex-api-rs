@@ -15,6 +15,7 @@ services:
       OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME}
       OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: ${OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:-http://otel:4317}
       RUST_BACKTRACE: ${RUST_BACKTRACE}
+      MONGODB_URI: ${MONGODB_URI}
     depends_on:
       - otel-collector
   otel-collector:

@@ -14,7 +14,6 @@ use tracing_subscriber::registry::LookupSpan;
 use tracing_subscriber::Layer;
 
 use crate::layer::OpenTelemetryTracingBridge;
-use crate::trace_id_format::TraceIdFormat;
 
 #[must_use]
 pub fn build_logger_text<S>() -> Box<dyn Layer<S> + Send + Sync + 'static>

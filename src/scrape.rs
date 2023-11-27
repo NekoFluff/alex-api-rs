@@ -3,8 +3,6 @@ use std::thread;
 use std::time::Duration;
 use std::{collections::HashMap, fs::File};
 
-use reqwest::Response;
-
 use crate::data::{Materials, Recipe};
 use crate::timekeeper;
 
@@ -40,7 +38,7 @@ impl<'a> RetryRequest<'a> {
                         scraper::Selector::parse("table.pc_table:nth-of-type(1)").unwrap();
                     let table_elems: Vec<_> = document.select(&table_selector).collect();
 
-                    if let Some(table) = table_elems.first() {
+                    if let Some(_table) = table_elems.first() {
                         return Ok(text_response);
                     } else {
                         println!("Unable to find production chain table for url {}", self.url);
@@ -81,7 +79,7 @@ impl Scraper {
 
         if urls.is_empty() {
             urls = self.get_urls().await;
-            urls.iter().for_each(|(item)| println!("{}", item));
+            urls.iter().for_each(|item| println!("{}", item));
         }
 
         let mut recipe_lists = vec![];
@@ -95,7 +93,7 @@ impl Scraper {
                 timekeeper.tick()
             );
 
-            let recipe_list = self.scrape_url(&url).await;
+            let recipe_list = self.scrape_url(url).await;
             recipe_lists.push(recipe_list);
             thread::sleep(Duration::from_millis(1000));
         }
@@ -194,7 +192,7 @@ impl Scraper {
                 let time_selector = scraper::Selector::parse("div.tt_rec_arrow");
                 let time_text = row.select(&time_selector.unwrap()).map(|x| x.text()).next();
 
-                if (time_text.is_none()) {
+                if time_text.is_none() {
                     continue;
                 }
 

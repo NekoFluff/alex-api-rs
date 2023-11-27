@@ -1,5 +1,5 @@
 use opentelemetry::trace::TraceContextExt;
-use opentelemetry::trace::{SpanBuilder, SpanId, TraceId};
+use opentelemetry::trace::{SpanId, TraceId};
 use serde::ser::{SerializeMap, Serializer as _};
 use std::io;
 use tracing::{Event, Subscriber};
@@ -7,7 +7,6 @@ use tracing_opentelemetry::OpenTelemetrySpanExt;
 use tracing_serde::fields::AsMap;
 use tracing_serde::AsSerde;
 use tracing_subscriber::fmt::format::Writer;
-use tracing_subscriber::fmt::time::FormatTime;
 use tracing_subscriber::fmt::{FmtContext, FormatEvent, FormatFields};
 use tracing_subscriber::registry::LookupSpan;
 pub struct WriteAdaptor<'a> {

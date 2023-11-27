@@ -1,9 +1,6 @@
 use std::vec;
 
-use opentelemetry_api::{
-    logs::{LogRecord, Logger, LoggerProvider, Severity, TraceContext},
-    trace::{SpanId, TraceId},
-};
+use opentelemetry_api::logs::{LogRecord, Logger, LoggerProvider, Severity, TraceContext};
 
 use opentelemetry_api::trace::TraceContextExt;
 use tracing_opentelemetry::OpenTelemetrySpanExt;

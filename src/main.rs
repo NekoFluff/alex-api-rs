@@ -2,16 +2,13 @@
 #![allow(clippy::default_constructed_unit_structs)] // warning since 1.71
 
 use axum::extract::Path;
-use axum::{response::IntoResponse, routing::get, routing::post, BoxError, Router};
+use axum::{response::IntoResponse, routing::get, routing::post, Router};
 use axum_tracing_opentelemetry::middleware::{OtelAxumLayer, OtelInResponseLayer};
 use dsp::ComputedRecipeRequest;
-use optimizer::OptimizerConfig;
 use serde_json::json;
 use std::collections::HashMap;
 use std::error::Error;
 use std::net::SocketAddr;
-use tracing::span::Id;
-use tracing_opentelemetry::OpenTelemetrySpanExt;
 use tracing_opentelemetry_instrumentation_sdk::find_current_trace_id;
 
 mod data;
@@ -62,6 +59,7 @@ fn app() -> Router {
         .route("/", get(index)) // request processed inside span
         .route("/dsp/recipes", get(dsp_recipes))
         .route("/dsp/computedRecipes", post(dsp_computed_recipes))
+        .route("/dsp/recipes/reload", get(dsp_reload_recipes))
         // include trace context as header into the response
         .layer(OtelInResponseLayer::default())
         //start OpenTelemetry trace on incoming request
@@ -95,7 +93,7 @@ async fn dsp_recipes() -> impl IntoResponse {
 async fn dsp_computed_recipes(
     axum::Json(payload): axum::Json<ComputedRecipeRequest>,
 ) -> impl IntoResponse {
-    let mut optimizer = optimizer::Optimizer::new(OptimizerConfig {});
+    let mut optimizer = optimizer::Optimizer::new();
     let recipes = dsp::load_recipes().await;
     optimizer.set_recipes(recipes);
     let mut seen = HashMap::new();
@@ -108,6 +106,13 @@ async fn dsp_computed_recipes(
         payload.requirements,
     );
     axum::Json(json!(computed_recipes))
+}
+
+#[tracing::instrument]
+#[axum::debug_handler]
+async fn dsp_reload_recipes() -> impl IntoResponse {
+    dsp::refresh_data().await;
+    axum::Json(json!({ "status": "OK" }))
 }
 
 #[tracing::instrument]

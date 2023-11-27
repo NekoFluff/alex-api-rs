@@ -6,17 +6,12 @@ use std::collections::HashMap;
 #[derive(Debug)]
 pub struct Optimizer {
     recipe_map: HashMap<String, Vec<Recipe>>,
-    config: OptimizerConfig,
 }
 
-#[derive(Debug)]
-pub struct OptimizerConfig {}
-
 impl Optimizer {
-    pub fn new(config: OptimizerConfig) -> Self {
+    pub fn new() -> Self {
         Self {
             recipe_map: HashMap::new(),
-            config,
         }
     }
 
@@ -73,13 +68,13 @@ impl Optimizer {
 
         let mut consumed_mats = HashMap::new();
         let mut number_of_facilities_needed = 0_f64;
-        if (recipe.output_item_count > 0.0) {
+        if recipe.output_item_count > 0.0 {
             number_of_facilities_needed = recipe.time * crafting_speed / recipe.output_item_count;
         }
         for (material_name, material_count) in recipe.materials.iter() {
             let mut new_material_count = 0_f64;
 
-            if (recipe.time > 0.0) {
+            if recipe.time > 0.0 {
                 new_material_count = material_count * number_of_facilities_needed / recipe.time;
             }
 
@@ -124,13 +119,13 @@ impl Optimizer {
     fn sort_recipes(&self, recipes: &mut Vec<ComputedRecipe>) {
         recipes.sort_by(|a, b| {
             if a.depth != b.depth {
-                return a.depth.cmp(&b.depth);
+                a.depth.cmp(&b.depth)
             } else if a.output_item != b.output_item {
-                return a.output_item.cmp(&b.output_item);
+                a.output_item.cmp(&b.output_item)
             } else if a.used_for != b.used_for {
-                return a.used_for.cmp(&b.used_for);
+                a.used_for.cmp(&b.used_for)
             } else {
-                return a.crafting_per_sec.partial_cmp(&b.crafting_per_sec).unwrap();
+                a.crafting_per_sec.partial_cmp(&b.crafting_per_sec).unwrap()
             }
         });
     }
@@ -194,7 +189,7 @@ fn max(a: Option<i64>, b: Option<i64>) -> Option<i64> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{data::Recipe, optimizer};
+    use crate::data::Recipe;
 
     #[test]
 
@@ -241,8 +236,7 @@ mod tests {
             },
         ];
 
-        let combined_recipes =
-            super::Optimizer::new(super::OptimizerConfig {}).combine_recipes(&mut recipes);
+        let combined_recipes = super::Optimizer::new().combine_recipes(&mut recipes);
         assert_eq!(combined_recipes.len(), 1);
         assert_eq!(combined_recipes[0].num_facilities_needed, 2.0);
         assert_eq!(
@@ -301,7 +295,7 @@ mod tests {
             },
         ];
 
-        super::Optimizer::new(super::OptimizerConfig {}).sort_recipes(&mut recipes);
+        super::Optimizer::new().sort_recipes(&mut recipes);
         assert_eq!(recipes[0].output_item, "Iron Ingot C");
         assert_eq!(recipes[1].output_item, "Iron Ingot A");
         assert_eq!(recipes[2].output_item, "Iron Ingot B");
@@ -345,7 +339,7 @@ mod tests {
 
         let mut seen_recipes = std::collections::HashMap::new();
         let recipe_requirements = std::collections::HashMap::new();
-        let mut optimizer = super::Optimizer::new(super::OptimizerConfig {});
+        let mut optimizer = super::Optimizer::new();
         optimizer.set_recipes(recipe_map);
         let recipes = optimizer
             .get_optimal_recipe(

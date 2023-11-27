@@ -8,9 +8,9 @@ pub struct TimeKeeper {
 
 #[derive(Debug)]
 pub struct Tick {
-    time: u128,
-    time_since_last_tick: u128,
-    time_since_start: u128,
+    pub time: u128,
+    pub time_since_last_tick: u128,
+    pub time_since_start: u128,
 }
 
 impl TimeKeeper {

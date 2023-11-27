@@ -1,7 +1,7 @@
 use std::env;
 
 use super::Recipe;
-use futures::{StreamExt, TryStreamExt};
+use futures::TryStreamExt;
 use mongodb::bson::Document;
 use mongodb::{bson::doc, Client, Collection};
 

@@ -12,7 +12,7 @@ Read up on secrets [here](https://kubernetes.io/docs/concepts/configuration/secr
 
 ```bash
 kubectl create secret generic newrelic-key-secret --from-literal=new_relic_license_key=XXXX
-kubectl create secret generic mongodb-secret --from-literal=mongodb_uri=XXXX -n dev
+kubectl create secret generic mongodb-secret --from-literal=MONGODB_URI=XXXX -n dev
 ```
 
 ### Read/Edit/Delete secrets
@@ -141,8 +141,13 @@ curl --resolve alex-api-rs.com:80:127.0.0.1 http://alex-api-rs.com/test
 
 # Upgrade
 ```bash
-helm upgrade alex-api-rs deployment --values deployment/values.yaml -n dev
-helm upgrade alex-api-rs deployment --values deployment/values.yaml -f deployment/prod-values.yaml -n prod
+helm upgrade --install alex-api-rs deployment --values deployment/values.yaml -n dev
+helm upgrade --install alex-api-rs deployment --values deployment/values.yaml -f deployment/prod-values.yaml -n prod
+```
+
+# Debug
+```bash
+kubectl exec -it alex-api-rs-7b8749589c-t624l -n dev -- sh
 ```
 
 # Uninstall
